@@ -1,4 +1,4 @@
-package luccas.dev.logmanager.controller;
+package luccas.dev.logmanager.controller.v1;
 
 import luccas.dev.logmanager.service.AccessLogService;
 import org.springframework.web.bind.annotation.RequestMapping;
