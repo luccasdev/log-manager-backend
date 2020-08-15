@@ -3,7 +3,6 @@ package luccas.dev.logmanager.controller.v1;
 import luccas.dev.logmanager.service.AccessLogService;
 import luccas.dev.logmanager.utils.Pages;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +42,7 @@ public class AccessLogController {
     }
 
     @DeleteMapping("/{id}")
-    public AccessLogDto delete(@PathVariable("id") Long accessLogId) {
+    public void delete(@PathVariable("id") Long accessLogId) {
         accessLogService.deleteById(accessLogId);
     }
 }
