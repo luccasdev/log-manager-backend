@@ -22,7 +22,7 @@ public class AccessLog {
     private Long id;
 
     @Column(name = "created_at", nullable = false)
-    private Date created_at;
+    private Date createdAt;
 
     @Column(name = "ip_address", nullable = false)
     private String ipAddress;
@@ -35,4 +35,5 @@ public class AccessLog {
 
     @Column(name = "user_agent", nullable = false)
     private String userAgent;
+
 }
