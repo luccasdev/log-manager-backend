@@ -18,7 +18,7 @@ public class AccessLogController {
 
     @GetMapping("/{id}")
     public AccessLogDto findById(@PathVariable("id") Long id) {
-        return null;
+        return AccessLogMapper.entityToDto(this.accessLogService.findById(id));
     }
 
 }
