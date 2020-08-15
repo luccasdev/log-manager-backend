@@ -1,13 +1,7 @@
 package luccas.dev.logmanager.repository;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
 import lombok.experimental.UtilityClass;
 import luccas.dev.logmanager.model.AccessLog;
-import luccas.dev.logmanager.utils.dto.RangeDateDto;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Date;
