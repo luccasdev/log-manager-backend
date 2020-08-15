@@ -13,12 +13,13 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_access_log_aclo")
+@Table(name = "tb_access_log_aclo", schema = "public")
 public class AccessLog {
 
     @Id
-    @GeneratedValue(generator = "sq_access_log", strategy = GenerationType.SEQUENCE)
-    @Column(name = "id_access_log", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_access_log")
+    @SequenceGenerator(name = "sq_access_log", sequenceName = "sq_access_log", allocationSize = 1)
+    @Column(name = "id_access_log")
     private Long id;
 
     @Column(name = "created_at", nullable = false)

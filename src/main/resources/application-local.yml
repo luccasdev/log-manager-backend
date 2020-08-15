@@ -1,0 +1,21 @@
+spring:
+  profiles:
+    active: local
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/db_log_manager
+    username: postgres
+    password: postgres
+    hikari:
+      maximum-pool-size: 10
+
+  jpa:
+    hibernate.ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    baseline-on-migrate: true
