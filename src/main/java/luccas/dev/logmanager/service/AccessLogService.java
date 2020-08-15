@@ -10,6 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -31,5 +34,18 @@ public class AccessLogService {
     public Page<AccessLog> findAll(Pageable pageable) {
         Pageable pageableWithDefaultSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), defaultSort);
         return this.accessLogRepository.findAll(pageableWithDefaultSort);
+    }
+
+    public AccessLog create(AccessLog accessLog) {
+        return this.accessLogRepository.save(accessLog);
+    }
+
+    public AccessLog update(AccessLog accessLog) {
+        return this.accessLogRepository.save(accessLog);
+    }
+
+    @Transactional
+    public void deleteById(Long accessLogId) {
+        this.accessLogRepository.deleteById(accessLogId);
     }
 }

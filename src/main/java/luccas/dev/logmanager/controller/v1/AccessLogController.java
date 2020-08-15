@@ -31,4 +31,19 @@ public class AccessLogController {
                 AccessLogMapper::entityToDto
         );
     }
+
+    @PostMapping
+    public AccessLogDto create(@RequestBody AccessLogDto accessLogDto) {
+        return AccessLogMapper.entityToDto(accessLogService.create(AccessLogMapper.dtoToEntity(accessLogDto)));
+    }
+
+    @PutMapping
+    public AccessLogDto update(@RequestBody AccessLogDto accessLogDto) {
+        return AccessLogMapper.entityToDto(accessLogService.update(AccessLogMapper.dtoToEntity(accessLogDto)));
+    }
+
+    @DeleteMapping("/{id}")
+    public AccessLogDto delete(@PathVariable("id") Long accessLogId) {
+        accessLogService.deleteById(accessLogId);
+    }
 }
