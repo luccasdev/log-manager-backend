@@ -4,6 +4,8 @@ import luccas.dev.logmanager.service.AccessLogService;
 import luccas.dev.logmanager.utils.Pages;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,8 +34,10 @@ public class AccessLogController {
     }
 
     @PostMapping
-    public AccessLogDto create(@RequestBody AccessLogDto accessLogDto) {
-        return AccessLogMapper.entityToDto(accessLogService.create(AccessLogMapper.dtoToEntity(accessLogDto)));
+    public ResponseEntity<AccessLogDto> create(@RequestBody AccessLogDto accessLogDto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(AccessLogMapper.entityToDto(accessLogService.create(AccessLogMapper.dtoToEntity(accessLogDto))));
     }
 
     @PutMapping

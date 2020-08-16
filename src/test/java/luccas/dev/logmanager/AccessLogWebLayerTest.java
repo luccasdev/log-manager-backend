@@ -3,6 +3,8 @@ package luccas.dev.logmanager;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import luccas.dev.logmanager.controller.v1.AccessLogController;
+import luccas.dev.logmanager.controller.v1.AccessLogDto;
+import luccas.dev.logmanager.controller.v1.AccessLogMapper;
 import luccas.dev.logmanager.model.AccessLog;
 import luccas.dev.logmanager.service.AccessLogService;
 import luccas.dev.logmanager.utils.Pages;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -88,5 +91,27 @@ public class AccessLogWebLayerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].ipAddress").value("192.168.234.82"));
+    }
+
+    @Test
+    public void post_createAccessLog_returnsOkWithAccessLogAndStatusCreated() throws Exception {
+        AccessLogDto accessLogDto = new AccessLogDto();
+        accessLogDto.setCreatedAt(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        accessLogDto.setIpAddress("192.168.217.28");
+        accessLogDto.setRequestLine("GET / HTTP/1.1");
+        accessLogDto.setResponseStatus(200);
+        accessLogDto.setUserAgent("swcd (unknown version) CFNetwork/808.2.16 Darwin/15.6.0");
+
+        Mockito.when(accessLogService.create(Mockito.any(AccessLog.class))).thenReturn(AccessLogMapper.dtoToEntity(accessLogDto));
+
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.post("/access-log/v1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE).accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(this.mapper.writeValueAsBytes(accessLogDto));
+
+        mockMvc.perform(builder)
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.ipAddress").value("192.168.217.28"))
+                .andExpect(MockMvcResultMatchers.content().string(this.mapper.writeValueAsString(accessLogDto)));
     }
 }
