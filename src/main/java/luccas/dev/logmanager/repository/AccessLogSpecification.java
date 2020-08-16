@@ -12,7 +12,6 @@ import java.util.Objects;
 
 public class AccessLogSpecification {
 
-
     public static Specification<AccessLog> byIpAddress(String ipAddress) {
         return new Specification<>() {
             @Override

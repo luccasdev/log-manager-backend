@@ -15,6 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Objects;
 
 
@@ -32,7 +36,7 @@ public class AccessLogService {
 
     public AccessLog findById(Long id) {
         return this.accessLogRepository.findById(id)
-                .orElseThrow(() -> new CustomException("Log não encontrado!", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException("Log não encontrado.", HttpStatus.NOT_FOUND));
     }
 
     public Page<AccessLog> findAll(Pageable pageable) {
@@ -61,11 +65,27 @@ public class AccessLogService {
     }
 
     public AccessLog update(AccessLog accessLog) {
+        boolean exists = this.accessLogRepository.existsById(accessLog.getId());
+        if (!exists)
+            throw new CustomException("ID do log não existente.", HttpStatus.UNPROCESSABLE_ENTITY);
         return this.accessLogRepository.save(accessLog);
     }
 
     @Transactional
     public void deleteById(Long accessLogId) {
+        boolean exists = this.accessLogRepository.existsById(accessLogId);
+        if (!exists)
+            throw new CustomException("ID do log não existente.", HttpStatus.UNPROCESSABLE_ENTITY);
         this.accessLogRepository.deleteById(accessLogId);
+    }
+
+    public void upload(InputStream file) throws IOException {
+        String text = "";
+
+        BufferedReader bfReader = new BufferedReader(new InputStreamReader(file));
+        while ((text = bfReader.readLine()) != null) {
+            String[] data = text.split("\\|");
+            System.out.println(data[0] + " " + data[1] + " " + data[3]);
+        }
     }
 }

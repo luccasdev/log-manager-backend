@@ -1,19 +1,17 @@
 package luccas.dev.logmanager.utils.errors;
 
+
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 
+@Data
 public class CustomException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+    private HttpStatus httpStatus;
 
-    private final HttpStatus status;
-
-    public CustomException(String message, HttpStatus status) {
-        super(message, null, false, false);
-        this.status = status;
+    public CustomException(String message, HttpStatus httpStatus){
+        super(message);
+        this.httpStatus = httpStatus;
     }
 
-    public HttpStatus getStatus() {
-        return status;
-    }
 }

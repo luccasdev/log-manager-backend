@@ -9,6 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+
 
 @RestController
 @RequestMapping("/access-log/v1")
@@ -58,5 +63,18 @@ public class AccessLogController {
                 accessLogService.findAllWithFilter(pageFilter),
                 AccessLogMapper::entityToDto
         );
+    }
+
+    @PostMapping("/upload")
+    public void upload(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        String filename = request.getParameter("file-name");
+        String contentType = request.getContentType();
+        InputStream file = request.getInputStream();
+
+        System.out.println(file);
+        System.out.println(contentType);
+        System.out.println(filename);
+        this.accessLogService.upload(file);
     }
 }
