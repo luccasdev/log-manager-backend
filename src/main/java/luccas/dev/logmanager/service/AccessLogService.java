@@ -1,8 +1,11 @@
 package luccas.dev.logmanager.service;
 
 import lombok.extern.slf4j.Slf4j;
+import luccas.dev.logmanager.controller.v1.AccessLogFilter;
 import luccas.dev.logmanager.model.AccessLog;
 import luccas.dev.logmanager.repository.AccessLogRepository;
+import luccas.dev.logmanager.repository.AccessLogSpecification;
+import luccas.dev.logmanager.utils.dto.PageFilter;
 import luccas.dev.logmanager.utils.errors.CustomException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,14 +15,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 
 @Service
 @Slf4j
 public class AccessLogService {
 
-    private final Sort defaultSort = Sort.by("createdDate").descending();
+    private final Sort defaultSort = Sort.by("createdAt").descending();
 
-    private AccessLogRepository accessLogRepository;
+    private final AccessLogRepository accessLogRepository;
 
     public AccessLogService(AccessLogRepository accessLogRepository) {
         this.accessLogRepository = accessLogRepository;
@@ -33,6 +38,22 @@ public class AccessLogService {
     public Page<AccessLog> findAll(Pageable pageable) {
         Pageable pageableWithDefaultSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), defaultSort);
         return this.accessLogRepository.findAll(pageableWithDefaultSort);
+    }
+
+    public Page<AccessLog> findAllWithFilter(PageFilter<AccessLogFilter> pageFilter) {
+        Sort sort;
+        if (Objects.isNull(pageFilter.getDirection()) && Objects.isNull(pageFilter.getField())) {
+            sort = defaultSort;
+        } else {
+            sort = Sort.by(pageFilter.getDirection(), pageFilter.getField());
+        }
+
+        Pageable pageableWithSort = PageRequest.of(pageFilter.getPageNumber(), pageFilter.getPageSize(), sort);
+
+        return this.accessLogRepository.findAll(
+                AccessLogSpecification.byCreatedAt(pageFilter.getFilter().getCreateDateRange())
+                        .and(AccessLogSpecification.byIpAddress(pageFilter.getFilter().getIpAddress()))
+                        .and(AccessLogSpecification.byUserAgent(pageFilter.getFilter().getUserAgent())), pageableWithSort);
     }
 
     public AccessLog create(AccessLog accessLog) {

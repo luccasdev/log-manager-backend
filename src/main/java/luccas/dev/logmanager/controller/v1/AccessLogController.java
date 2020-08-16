@@ -2,11 +2,13 @@ package luccas.dev.logmanager.controller.v1;
 
 import luccas.dev.logmanager.service.AccessLogService;
 import luccas.dev.logmanager.utils.Pages;
+import luccas.dev.logmanager.utils.dto.PageFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/access-log/v1")
@@ -48,5 +50,13 @@ public class AccessLogController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Long accessLogId) {
         accessLogService.deleteById(accessLogId);
+    }
+
+    @PostMapping("/filter")
+    public Page<AccessLogDto> findWithFilter(@RequestBody PageFilter<AccessLogFilter> pageFilter) {
+        return Pages.from(
+                accessLogService.findAllWithFilter(pageFilter),
+                AccessLogMapper::entityToDto
+        );
     }
 }
