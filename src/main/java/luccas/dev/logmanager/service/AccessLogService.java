@@ -19,7 +19,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 
@@ -80,14 +81,15 @@ public class AccessLogService {
         this.accessLogRepository.deleteById(accessLogId);
     }
 
-    public void upload(InputStream file) throws IOException {
+    public void upload(InputStream file) throws IOException, ParseException {
         String text = "";
         BufferedReader bfReader = new BufferedReader(new InputStreamReader(file));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
         while ((text = bfReader.readLine()) != null) {
             String[] data = text.split("\\|");
             AccessLog accessLog = AccessLog.builder()
-                    .createdAt(new Date())
+                    .createdAt(dateFormat.parse(data[0]))
                     .ipAddress(data[1])
                     .requestLine(data[2].replaceAll("^[\"']+|[\"']+$", ""))
                     .responseStatus(Integer.parseInt(data[3]))
