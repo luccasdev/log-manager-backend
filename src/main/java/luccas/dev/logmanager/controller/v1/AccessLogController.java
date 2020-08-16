@@ -1,5 +1,6 @@
 package luccas.dev.logmanager.controller.v1;
 
+import lombok.extern.slf4j.Slf4j;
 import luccas.dev.logmanager.service.AccessLogService;
 import luccas.dev.logmanager.utils.Pages;
 import luccas.dev.logmanager.utils.dto.PageFilter;
@@ -10,11 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 
 
+@Slf4j
 @RestController
 @RequestMapping("/access-log/v1")
 public class AccessLogController {
@@ -66,15 +67,28 @@ public class AccessLogController {
     }
 
     @PostMapping("/upload")
-    public void upload(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ResponseEntity<AccessLogUploadResultDto> upload(HttpServletRequest request) throws IOException {
 
         String filename = request.getParameter("file-name");
         String contentType = request.getContentType();
         InputStream file = request.getInputStream();
 
-        System.out.println(file);
-        System.out.println(contentType);
-        System.out.println(filename);
-        this.accessLogService.upload(file);
+        log.info("Receive file: {} - with Content Type: {} to Upload.", filename, contentType);
+
+        try {
+            this.accessLogService.upload(file);
+            log.info("File: {} - upload with Success.", filename);
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(new AccessLogUploadResultDto("File upload with success", false));
+
+        } catch (Exception exception) {
+            log.error("File: {} - upload with Error: {}", filename, exception.getMessage());
+
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new AccessLogUploadResultDto("File upload with error: " + exception.getMessage(), true));
+        }
     }
 }

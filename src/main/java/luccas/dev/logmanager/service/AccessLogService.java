@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -81,11 +82,18 @@ public class AccessLogService {
 
     public void upload(InputStream file) throws IOException {
         String text = "";
-
         BufferedReader bfReader = new BufferedReader(new InputStreamReader(file));
+
         while ((text = bfReader.readLine()) != null) {
             String[] data = text.split("\\|");
-            System.out.println(data[0] + " " + data[1] + " " + data[3]);
+            AccessLog accessLog = AccessLog.builder()
+                    .createdAt(new Date())
+                    .ipAddress(data[1])
+                    .requestLine(data[2].replaceAll("^[\"']+|[\"']+$", ""))
+                    .responseStatus(Integer.parseInt(data[3]))
+                    .userAgent(data[4].replaceAll("^[\"']+|[\"']+$", ""))
+                    .build();
+            this.accessLogRepository.save(accessLog);
         }
     }
 }
