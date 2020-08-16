@@ -7,7 +7,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
 
-public class Dates {
+public abstract class Dates {
 
     public static Date from(LocalDate date) {
         if (Objects.isNull(date)) {
