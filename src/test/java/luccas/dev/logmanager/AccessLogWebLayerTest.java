@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AccessLogController.class)
@@ -136,5 +137,12 @@ public class AccessLogWebLayerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.ipAddress").value("192.168.217.28"))
                 .andExpect(MockMvcResultMatchers.content().string(this.mapper.writeValueAsString(accessLogDto)));
+    }
+
+    @Test
+    public void delete_deleteAccessLogById_returnsOk() throws Exception {
+        mockMvc.perform(delete("/access-log/v1/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
