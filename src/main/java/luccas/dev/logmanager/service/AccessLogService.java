@@ -15,12 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 
@@ -79,23 +73,5 @@ public class AccessLogService {
         if (!exists)
             throw new CustomException("ID do log não existente.", HttpStatus.UNPROCESSABLE_ENTITY);
         this.accessLogRepository.deleteById(accessLogId);
-    }
-
-    public void upload(InputStream file) throws IOException, ParseException {
-        String text = "";
-        BufferedReader bfReader = new BufferedReader(new InputStreamReader(file));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
-        while ((text = bfReader.readLine()) != null) {
-            String[] data = text.split("\\|");
-            AccessLog accessLog = AccessLog.builder()
-                    .createdAt(dateFormat.parse(data[0]))
-                    .ipAddress(data[1])
-                    .requestLine(data[2].replaceAll("^[\"']+|[\"']+$", ""))
-                    .responseStatus(Integer.parseInt(data[3]))
-                    .userAgent(data[4].replaceAll("^[\"']+|[\"']+$", ""))
-                    .build();
-            this.accessLogRepository.save(accessLog);
-        }
     }
 }

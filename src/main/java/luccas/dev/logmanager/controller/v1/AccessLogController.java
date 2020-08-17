@@ -2,6 +2,7 @@ package luccas.dev.logmanager.controller.v1;
 
 import lombok.extern.slf4j.Slf4j;
 import luccas.dev.logmanager.service.AccessLogService;
+import luccas.dev.logmanager.service.UploadFileService;
 import luccas.dev.logmanager.utils.Pages;
 import luccas.dev.logmanager.utils.dto.PageFilter;
 import org.springframework.data.domain.Page;
@@ -11,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 
 
 @Slf4j
@@ -21,9 +24,11 @@ import java.io.InputStream;
 public class AccessLogController {
 
     private final AccessLogService accessLogService;
+    private final UploadFileService uploadFileService;
 
-    public AccessLogController(AccessLogService accessLogService) {
+    public AccessLogController(AccessLogService accessLogService, UploadFileService uploadFileService) {
         this.accessLogService = accessLogService;
+        this.uploadFileService = uploadFileService;
     }
 
     @GetMapping("/{id}")
@@ -67,28 +72,28 @@ public class AccessLogController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<AccessLogUploadResultDto> upload(HttpServletRequest request) throws IOException {
+    public ResponseEntity<AccessLogUploadResultDto> upload(HttpServletRequest request) throws IOException, ParseException {
 
         String filename = request.getParameter("file-name");
         String contentType = request.getContentType();
-        InputStream file = request.getInputStream();
-
+        InputStream input = request.getInputStream();
         log.info("Receive file: {} - with Content Type: {} to Upload.", filename, contentType);
-
         try {
-            this.accessLogService.upload(file);
-            log.info("File: {} - upload with Success.", filename);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            input.transferTo(byteArrayOutputStream);
+            byteArrayOutputStream.flush();
+            this.uploadFileService.readFileAndPersist(byteArrayOutputStream, this.uploadFileService.createUploadFile().getId());
 
             return ResponseEntity
                     .status(HttpStatus.CREATED)
-                    .body(new AccessLogUploadResultDto("File upload with success", false));
+                    .body(new AccessLogUploadResultDto("File uploading in batch.", false));
 
         } catch (Exception exception) {
-            log.error("File: {} - upload with Error: {}", filename, exception.getMessage());
-
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new AccessLogUploadResultDto("File upload with error: " + exception.getMessage(), true));
+                    .body(new AccessLogUploadResultDto("Error on upload file to batch.", true));
+
         }
+
     }
 }

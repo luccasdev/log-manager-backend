@@ -6,3 +6,6 @@ spring:
     name: 'log-manager'
   profiles:
     active: @activatedProperties@
+  mvc:
+    async:
+      request-timeout: 6000000
