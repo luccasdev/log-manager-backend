@@ -6,13 +6,14 @@ import luccas.dev.logmanager.service.AccessLogService;
 import luccas.dev.logmanager.service.UploadFileService;
 import luccas.dev.logmanager.utils.Pages;
 import luccas.dev.logmanager.utils.dto.PageFilter;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,15 +73,14 @@ public class AccessLogController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<AccessLogUploadResultDto> upload(HttpServletRequest request) throws IOException {
+    public ResponseEntity<AccessLogUploadResultDto> upload(@RequestParam("file") final MultipartFile multiPart) throws IOException, FileUploadException {
 
-        String filename = request.getParameter("file-name");
-        String contentType = request.getContentType();
-        InputStream input = request.getInputStream();
-        log.info("Receive file: {} - with Content Type: {} to Upload.", filename, contentType);
+        log.info("Receive file: {} with Content Type: {} - to Upload.", multiPart.getOriginalFilename(), multiPart.getContentType());
+
+        InputStream fileInputStream = multiPart.getInputStream();
         try {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            input.transferTo(byteArrayOutputStream);
+            fileInputStream.transferTo(byteArrayOutputStream);
             byteArrayOutputStream.flush();
             UploadFile uploadFile = this.uploadFileService.createUploadFile();
             this.uploadFileService.readFileAndPersist(byteArrayOutputStream, uploadFile.getId());
