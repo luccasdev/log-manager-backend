@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 
 
 @Slf4j
@@ -73,7 +72,7 @@ public class AccessLogController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<AccessLogUploadResultDto> upload(HttpServletRequest request) throws IOException, ParseException {
+    public ResponseEntity<AccessLogUploadResultDto> upload(HttpServletRequest request) throws IOException {
 
         String filename = request.getParameter("file-name");
         String contentType = request.getContentType();
