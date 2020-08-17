@@ -1,6 +1,7 @@
 package luccas.dev.logmanager.service;
 
 import lombok.extern.slf4j.Slf4j;
+import luccas.dev.logmanager.controller.v1.UploadHistoryDto;
 import luccas.dev.logmanager.model.AccessLog;
 import luccas.dev.logmanager.model.UploadFile;
 import luccas.dev.logmanager.model.UploadProcessEnum;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -56,10 +58,11 @@ public class UploadFileService {
         }
     }
 
-    public UploadFile createUploadFile() {
+    public UploadFile createUploadFile(String fileName) {
         return this.uploadFileRepository.save(
                 UploadFile.builder()
                         .status(UploadProcessEnum.PROCESSING)
+                        .fileName(fileName)
                         .uploadAt(new Date())
                         .build()
         );
@@ -71,5 +74,9 @@ public class UploadFileService {
             return;
         uploadFile.get().setStatus(status);
         this.uploadFileRepository.save(uploadFile.get());
+    }
+
+    public List<UploadFile> findAllUploadHistory() {
+        return this.uploadFileRepository.findAll();
     }
 }

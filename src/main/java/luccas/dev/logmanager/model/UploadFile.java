@@ -22,6 +22,9 @@ public class UploadFile {
     @Column(name = "id_upload_file")
     private Long id;
 
+    @Column(name = "file_name")
+    private String fileName;
+
     @Column(name = "upload_at", nullable = false)
     private Date uploadAt;
 

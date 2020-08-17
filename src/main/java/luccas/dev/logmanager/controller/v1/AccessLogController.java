@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Slf4j
@@ -37,12 +39,12 @@ public class AccessLogController {
     }
 
     @GetMapping
-    public Page<AccessLogDto> findAll(
+    public Page<AccessLogListDto> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         return Pages.from(
                 accessLogService.findAll(PageRequest.of(page, size)),
-                AccessLogMapper::entityToDto
+                AccessLogMapper::entityToAccessLogListDto
         );
     }
 
@@ -64,10 +66,10 @@ public class AccessLogController {
     }
 
     @PostMapping("/filter")
-    public Page<AccessLogDto> findWithFilter(@RequestBody PageFilter<AccessLogFilter> pageFilter) {
+    public Page<AccessLogListDto> findWithFilter(@RequestBody PageFilter<AccessLogFilter> pageFilter) {
         return Pages.from(
                 accessLogService.findAllWithFilter(pageFilter),
-                AccessLogMapper::entityToDto
+                AccessLogMapper::entityToAccessLogListDto
         );
     }
 
@@ -81,7 +83,7 @@ public class AccessLogController {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             fileInputStream.transferTo(byteArrayOutputStream);
             byteArrayOutputStream.flush();
-            UploadFile uploadFile = this.uploadFileService.createUploadFile();
+            UploadFile uploadFile = this.uploadFileService.createUploadFile(multiPart.getOriginalFilename());
             this.uploadFileService.readFileAndPersist(byteArrayOutputStream, uploadFile.getId());
 
             return ResponseEntity
@@ -95,5 +97,14 @@ public class AccessLogController {
 
         }
 
+    }
+
+    @GetMapping("/upload/history")
+    public List<UploadHistoryDto> findAllUploadHistory() {
+        List<UploadHistoryDto> result = new ArrayList<>();
+        this.uploadFileService.findAllUploadHistory().forEach(uploadFile -> {
+            result.add(AccessLogMapper.uploadEntityToDto(uploadFile));
+        });
+        return result;
     }
 }
