@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -63,14 +64,10 @@ public class UploadFileService {
     }
 
     private void updateStatusUploadFile(Long uploadId, UploadProcessEnum status) {
-        if (!this.uploadFileRepository.existsById(uploadId))
+        Optional<UploadFile> uploadFile = this.uploadFileRepository.findById(uploadId);
+        if (uploadFile.isEmpty())
             return;
-        this.uploadFileRepository.save(
-                UploadFile.builder()
-                        .id(uploadId)
-                        .status(status)
-                        .uploadAt(new Date())
-                        .build()
-        );
+        uploadFile.get().setStatus(status);
+        this.uploadFileRepository.save(uploadFile.get());
     }
 }

@@ -1,6 +1,7 @@
 package luccas.dev.logmanager.controller.v1;
 
 import lombok.extern.slf4j.Slf4j;
+import luccas.dev.logmanager.model.UploadFile;
 import luccas.dev.logmanager.service.AccessLogService;
 import luccas.dev.logmanager.service.UploadFileService;
 import luccas.dev.logmanager.utils.Pages;
@@ -82,7 +83,8 @@ public class AccessLogController {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             input.transferTo(byteArrayOutputStream);
             byteArrayOutputStream.flush();
-            this.uploadFileService.readFileAndPersist(byteArrayOutputStream, this.uploadFileService.createUploadFile().getId());
+            UploadFile uploadFile = this.uploadFileService.createUploadFile();
+            this.uploadFileService.readFileAndPersist(byteArrayOutputStream, uploadFile.getId());
 
             return ResponseEntity
                     .status(HttpStatus.CREATED)
