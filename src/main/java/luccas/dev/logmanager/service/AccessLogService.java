@@ -45,7 +45,7 @@ public class AccessLogService {
         if (Objects.isNull(pageFilter.getDirection()) && Objects.isNull(pageFilter.getField())) {
             sort = defaultSort;
         } else {
-            sort = Sort.by(pageFilter.getDirection(), pageFilter.getField());
+            sort = Sort.by(Sort.Direction.fromString(pageFilter.getDirection()), pageFilter.getField());
         }
 
         Pageable pageableWithSort = PageRequest.of(pageFilter.getPageNumber(), pageFilter.getPageSize(), sort);

@@ -2,6 +2,7 @@ package luccas.dev.logmanager.repository;
 
 import luccas.dev.logmanager.model.AccessLog;
 import luccas.dev.logmanager.utils.dto.RangeDateDto;
+import org.junit.platform.commons.util.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -16,7 +17,7 @@ public class AccessLogSpecification {
         return new Specification<>() {
             @Override
             public Predicate toPredicate(Root<AccessLog> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                if (!Objects.isNull(ipAddress))
+                if (StringUtils.isNotBlank(ipAddress))
                     return builder.equal(root.get("ipAddress"), ipAddress);
                 return null;
             }
@@ -26,7 +27,7 @@ public class AccessLogSpecification {
         return new Specification<>() {
             @Override
             public Predicate toPredicate(Root<AccessLog> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                if (Objects.nonNull(rangeDateDto))
+                if (Objects.nonNull(rangeDateDto) && Objects.nonNull(rangeDateDto.getStartDate()) && Objects.nonNull(rangeDateDto.getEndDate()))
                     return builder.between(root.get("createdAt"), rangeDateDto.getStartDate(), rangeDateDto.getEndDate());
                 return null;
             }
@@ -37,7 +38,7 @@ public class AccessLogSpecification {
         return new Specification<>() {
             @Override
             public Predicate toPredicate(Root<AccessLog> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-                if (!Objects.isNull(userAgent))
+                if (StringUtils.isNotBlank(userAgent))
                     return builder.like(root.get("userAgent"), userAgent);
                 return null;
             }
