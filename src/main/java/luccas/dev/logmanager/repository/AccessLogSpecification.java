@@ -39,7 +39,7 @@ public class AccessLogSpecification {
             @Override
             public Predicate toPredicate(Root<AccessLog> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
                 if (StringUtils.isNotBlank(userAgent))
-                    return builder.like(root.get("userAgent"), userAgent);
+                    return builder.like(root.get("userAgent"), "%" + userAgent + "%");
                 return null;
             }
         };
