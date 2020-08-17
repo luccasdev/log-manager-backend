@@ -6,7 +6,6 @@ import luccas.dev.logmanager.service.AccessLogService;
 import luccas.dev.logmanager.service.UploadFileService;
 import luccas.dev.logmanager.utils.Pages;
 import luccas.dev.logmanager.utils.dto.PageFilter;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -73,7 +72,7 @@ public class AccessLogController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<AccessLogUploadResultDto> upload(@RequestParam("file") final MultipartFile multiPart) throws IOException, FileUploadException {
+    public ResponseEntity<AccessLogUploadResultDto> upload(@RequestParam("file") final MultipartFile multiPart) throws IOException {
 
         log.info("Receive file: {} with Content Type: {} - to Upload.", multiPart.getOriginalFilename(), multiPart.getContentType());
 
