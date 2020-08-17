@@ -5,6 +5,8 @@ import luccas.dev.logmanager.model.AccessLog;
 import luccas.dev.logmanager.model.UploadFile;
 import luccas.dev.logmanager.model.UploadProcessEnum;
 import luccas.dev.logmanager.repository.UploadFileRepository;
+import luccas.dev.logmanager.utils.errors.CustomException;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -44,13 +46,13 @@ public class UploadFileService {
                             .build();
                     this.accessLogService.create(accessLog);
                 }
+                log.info("File processed with success");
                 this.updateStatusUploadFile(uploadId, UploadProcessEnum.SUCCESSFULY_PROCESSED);
             }
         } catch(final IOException e) {
             this.updateStatusUploadFile(uploadId, UploadProcessEnum.ERROR_ON_PROCESS);
-
             log.error("Failed to read file ", e);
-            throw new Exception("Failed to read file {}", e);
+            throw new CustomException("Failed to read file", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
