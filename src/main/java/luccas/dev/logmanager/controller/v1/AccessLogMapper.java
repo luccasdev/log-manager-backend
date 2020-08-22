@@ -50,7 +50,7 @@ public abstract class AccessLogMapper {
         if (Objects.isNull(uploadFile)) return new UploadHistoryDto();
         return UploadHistoryDto.builder()
                 .fileName(uploadFile.getFileName())
-                .uploadAt(uploadFile.getUploadAt())
+                .uploadAt(Dates.to(uploadFile.getUploadAt(), "yyyy-MM-dd HH:mm:ss.SSS"))
                 .uploadStatusMessage(uploadFile.getStatus().getName())
                 .build();
     }

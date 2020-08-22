@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import luccas.dev.logmanager.utils.dto.RangeDateDto;
+
+import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -12,7 +14,7 @@ import luccas.dev.logmanager.utils.dto.RangeDateDto;
 @AllArgsConstructor
 public class AccessLogFilter {
 
-    private RangeDateDto createDateRange;
+    private List<Date> createDateRange;
 
     private String ipAddress;
 

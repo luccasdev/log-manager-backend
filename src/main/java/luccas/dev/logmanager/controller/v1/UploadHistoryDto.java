@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,7 +13,7 @@ public class UploadHistoryDto {
 
     private String fileName;
 
-    private Date uploadAt;
+    private String uploadAt;
 
     private String uploadStatusMessage;
 }
