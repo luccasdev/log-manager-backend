@@ -38,18 +38,21 @@
 **LogManager** is a **Web Application to management user access**, with LogManager you can upload Access Log file, or insert manually.
 
 <p><b>1 - Dashboard</b></p>
-<span>In the dashboard panel, you can view all the logs, with pagination and the possibility of filtering.</span>
+<span>In the dashboard panel, you can view all the logs, with pagination and the possibility of filtering.</span><br>
+<sub>Click on the image to expand</sub>
 
 ![LogManager - Dashboard](https://i.imgur.com/EzNTJJh.png)
 
 <p><b>2 - Creating User Log Manually</b></p>
-<span>In the creation session, you can create user logs manually.</span>
+<span>In the creation session, you can create user logs manually.</span><br>
+<sub>Click on the image to expand</sub>
 
 ![LogManager - Create](https://i.imgur.com/zth4KxR.png)
 
 <p><b>3 - Uploading Access Log File</b></p>
 <span>In the upload session, you can upload files with user logs and the backend will process in batch. <b>(Asynchronous upload)</b></span><br>
-<span>You can see the upload history with status.</span>
+<span>You can see the upload history with status.</span><br>
+<sub>Click on the image to expand</sub>
 
 ![LogManager - Upload](https://i.imgur.com/urQKETg.png)
 
