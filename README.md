@@ -23,7 +23,7 @@
   <a href="#repositories">Repositories</a> •
   <a href="#technologies">Techonologies</a> •
   <a href="#features">Features</a> •
-  <a href="#author">Author Contact</a> •
+  <a href="#contact">Author Contact</a> •
   <a href="#license">License</a>
 </p>
 
@@ -92,7 +92,7 @@
 | See graphs of logs, requests, errors and ip's by geolocation |         In progress        |
 
 
-## Author Contact
+## Contact
 - [LinkedIn](https://www.linkedin.com/in/lucasrsouza-ti/)
 - [Twitter](https://twitter.com/lucasrdev)
 - Website at [luccas.dev](https://luccas.dev)
